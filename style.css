@@ -6,6 +6,18 @@ nav {
     box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
         -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
 }
+/* Style the date input field */
+#monthPicker {
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Style the date input when focused */
+
 
 .navLogo {
     height: 50px;
@@ -13,17 +25,23 @@ nav {
 
 .card {
     width: 18rem;
+    height:100%;
     box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
         -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
     padding: 20px;
     border-radius: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
+    text-decoration: none;
+    overflow: hidden;
 }
 
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 
+}
+.card a{
+    text-decoration: none;
 }
 
 .custom-navbar {
@@ -42,10 +60,21 @@ img {
     height: 100%;
     object-fit: cover;
 }
+.card img {
+  width: 100%;
+  height: 200px; 
+  object-fit: cover; 
+  border-bottom: 1px solid #ddd;
+}
 
 .card h3 {
     font-size: 18px;
     margin-top: 15px;
+    text-decoration: none;
+    color:black;
+}
+.card p{
+     color:black;
 }
 
 .theme-toggler {
@@ -94,6 +123,75 @@ body.dark-mode .theme-toggler span {
 
 #resToggler {
     display: none;
+}
+ .calendar-input {
+      display: none;
+    }
+.icon-count{
+    display: flex;
+    gap:10px;
+    align-items: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3; 
+  border-top: 5px solid #3498db; 
+  border-radius: 50%; 
+  animation: spin 1s linear infinite; 
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); 
+  }
+  100% {
+    transform: rotate(360deg); 
+  }
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 600px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.modal img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.visit-btn {
+  background: #ff6154;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+}
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.8em;
+  border-radius: 10px;
+}
+#productImg{
+    width:100px;
+    height:100px;
 }
 
 

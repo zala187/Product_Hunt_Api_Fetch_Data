@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "product-hunt-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2025-11-01",
+  "observability": {
+    "enabled": true
+  },
+  "triggers": {
+    "crons": ["* * * * *"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "PRODUCTS",
+      "id": "47e1c9a4090f4561a8814beb4f403528",
+      "remote": true
+    }
+  ]
+}
