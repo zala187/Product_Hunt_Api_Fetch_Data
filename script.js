@@ -1,55 +1,49 @@
-// async function checkHunt() {
+// async function latestfetchData() {
+//   const productList = document.getElementById("productList");
+//   productList.innerHTML = '<p class="spinner">Loading...</p>';
+
 //   try {
-//     const response = await fetch(Api_Url, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${Api_Key}`,
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//       },
-//       body: JSON.stringify({
-//         query: `
-//           {
-//             posts(first: 20) {
-//               edges {
-//                 node {
-//                   name
-//                   tagline
-//                   votesCount
-//                   website
-//                    topics { edges { node { name } } }
-//                   thumbnail { url }
-//                 }
-//               }
-//             }
-//           }
-//         `,
-//       }),
-//     });
+//     const res = await fetch(`https://product-hunt-worker.manishzala1718.workers.dev/`);
 
-//     if (!response.ok) throw new Error("Failed to fetch data");
+//     if (!res.ok) throw new Error("Failed to fetch latest data");
 
-//     const data = await response.json();
-//     const product = data.data.posts.edges;
+//     const data = await res.json();
+//     productList.innerHTML = "";
 
-//     const productContainer = document.getElementById("productContainer");
-//     productContainer.innerHTML = ""; // clear old data
+//     const latestList = data.latest || [];
 
-//     product.forEach(({ node }) => {
+//     latestList.forEach(p => {
 //       const div = document.createElement("div");
-//       div.className = "card";
+//       div.className = "card p-3 shadow-sm text-center";
+//       div.style.width = "18rem";
 //       div.innerHTML = `
-//         <img src="${node.thumbnail.url}" alt="${node.name}" />
-//         <h3>${node.name}</h3>
-//         <p>${node.tagline}</p>
-//         <strong>👍 ${node.votesCount} votes</strong>
+//         <div class="product-card">
+//           <a href="product.html?id=${encodeURIComponent(p.name)}" class="card-link text-decoration-none text-dark">
+//             <img src="${p.thumbnail?.url || 'default.jpg'}" class="img-fluid rounded-top" style="height:200px;object-fit:cover;" />
+//             <h5 class="mt-3 fw-bold">${p.name}</h5>
+//             <p class="text-muted">${p.tagline}</p>
+//             <p class="icon-count"><span class="material-symbols-outlined">mode_comment</span> ${p.votesCount}</p>
+//           </a>
+//           <a href="${p.website}" target="_blank" class="btn btn-outline-primary mt-2">Visit</a>
+//         </div>
 //       `;
-//       productContainer.appendChild(div);
+
+//       productList.appendChild(div);
+
+//       // Save product details in localStorage
+//       div.querySelector(".card-link").addEventListener("click", () => {
+//         localStorage.setItem("selectedProduct", JSON.stringify(p));
+//       });
 //     });
 //   } catch (error) {
-//     console.error("Error fetching Product Hunt data:", error);
+//     productList.innerHTML = "<p class='text-danger'>⚠️ Error loading data.</p>";
+//     console.error(error);
 //   }
 // }
+
+// // Run on page load
+// window.addEventListener("DOMContentLoaded", latestfetchData);
+
 
 
 async function fetchMonthlyData() {
@@ -107,6 +101,89 @@ window.addEventListener("load", () => {
     // aur yaha apne display logic ko firse run kar do
   }
 });
+
+async function latestfetchData() {
+  const productList = document.getElementById("productList");
+  const summary = document.getElementById("summary");
+
+  productList.innerHTML = '<div class="spinner"></div>';
+  summary.innerHTML = "";
+
+  try {
+    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/");
+    if (!res.ok) throw new Error("Failed to fetch latest data");
+
+    const data = await res.json();
+    productList.innerHTML = "";
+
+    summary.innerHTML = `
+      <h3>🔥 Latest Product Hunt Launches</h2>
+      <p>Total Products: ${data.products.length}</p>
+    `;
+
+    data.products.forEach((post, index) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
+        <h3>${index + 1}. ${post.name}</h3>
+        <p>${post.tagline}</p>
+        <img src="${post.thumbnail.url}" alt="${post.name}">
+        <p>⭐ ${post.votesCount} votes</p>
+        <a href="${post.website}" target="_blank">Visit →</a>
+      `;
+      productList.appendChild(card);
+    });
+
+  } catch (error) {
+    productList.innerHTML = `<p style="color:red;">${error.message}</p>`;
+  }
+}
+
+
+window.onload = latestfetchData;
+
+async function tradingfetchData() {
+  const productList = document.getElementById("productList");
+  const summary = document.getElementById("summary");
+
+  productList.innerHTML = '<div class="spinner"></div>';
+  summary.innerHTML = "";
+
+  try {
+    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/");
+    if (!res.ok) throw new Error("Failed to fetch latest data");
+
+    const data = await res.json();
+    productList.innerHTML = "";
+
+    summary.innerHTML = `
+      <h3>🔥 Trading Product Hunt Launches</h2>
+      <p>Total Products: ${data.products.length}</p>
+    `;
+
+    data.products.forEach((post, index) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
+        <h3>${index + 1}. ${post.name}</h3>
+        <p>${post.tagline}</p>
+        <img src="${post.thumbnail.url}" alt="${post.name}">
+        <p>⭐ ${post.votesCount} votes</p>
+        <a href="${post.website}" target="_blank">Visit →</a>
+      `;
+      productList.appendChild(card);
+    });
+
+  } catch (error) {
+    productList.innerHTML = `<p style="color:red;">${error.message}</p>`;
+  }
+}
+
+
+window.onload = tradingfetchData;
+
+
+
 const toggler = document.getElementById("themeToggler");
 const themeIcon = document.getElementById("themeIcon");
 
@@ -137,9 +214,3 @@ function clearData() {
   localStorage.removeItem("selectedMonth");
   alert("Data cleared!");
 }
-
-
-
-
-
-
