@@ -1,133 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Product Details</title>
+  <link rel="stylesheet" href="product.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
 </head>
 
-<body class="bg-light">
-
-  <!-- 🔹 SAME NAVBAR AS INDEX PAGE -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm custom-navbar">
-    <div class="container-fluid container">
-      <a class="navbar-brand" href="index.html">
-        <img src="hunted-space-icon.webp" class="navLogo" alt="">
-      </a>
-      <div class="right">
-        <div class="theme-toggler" id="resToggler">
-          <span class="material-symbols-outlined" id="resthemeIcon">light_mode</span>
-        </div>
-        <button class="navbar-toggler" id="toggleBtn" type="button" data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-          aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="index.html">Best</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Top</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Favorites</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Calendar</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#">Stats</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Upcoming</a></li>
-        </ul>
-
-        <form class="d-flex justify-content-center align-items-center gap-4">
-          <button class="btn btn-outline-danger" type="submit">Submit</button>
-                    <div class="theme-toggler" id="themeToggler">
-                        <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
-                    </div>
-
-        </form>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 🔹 PRODUCT DETAILS SECTION -->
-  <div class="container mt-5" id="productPage"></div>
+<body>
+  <div class="top-line"></div>
+  <div class="container">
+    <div id="productDetails"></div>
+  </div>
 
   <script>
-    // Get selected product from localStorage
     const product = JSON.parse(localStorage.getItem("selectedProduct"));
 
     if (product) {
-      document.getElementById("productPage").innerHTML = `
-        <div class="row">
-          <!-- Left side image -->
-          <div class="col-md-4">
-            <img src="${product.thumbnail?.url || ''}" class="img-fluid rounded shadow-sm mb-4" id="productImg" alt="${product.name}">
+      const videoSearch = encodeURIComponent(product.name + " AI short demo");
+      const videoEmbed = `
+        <iframe src="https://www.youtube.com/embed?listType=search&list=${videoSearch}" allowfullscreen></iframe>
+      `;
+
+      document.getElementById("productDetails").innerHTML = `
+        <div class="card">
+          <div class="d-flex flex-column">
+          <img src="${product.thumbnail?.url || 'default.jpg'}" alt="${product.name}" class="product-img">
+          <h2 class="fw-bold mb-3">${product.name}</h2>
+          <p class="text-muted">${product.tagline}</p>
           </div>
 
-          <!-- Right side info -->
-          <div class="col-md-6">
-            <h2 class="fw-bold">${product.name}</h2>
-            <p class="text-muted fs-5">${product.tagline}</p>
-            </div>
-            
-  <div class="col-md-2">
-            <button class="btn btn-danger mb-3" onclick="window.open('${product.website}', '_blank')">
-              Visit Website
-            </button>
-            </div>
-            
-
-            <div class="card p-3 mb-3 shadow-sm">
-              <h5>Overview</h5>
-              <p>${product.description || "No detailed description available."}</p>
-            </div>
-
-            <div class="card p-3 mb-3 shadow-sm">
-              <h5>Votes & Popularity</h5>
-              <p>👍 ${product.votesCount} Votes</p>
-            </div>
-
-            <div class="card p-3 shadow-sm">
-              <h5>Tags</h5>
-              <div>
-                ${(product.topics?.edges || [])
-                  .map(t => `<span class="badge bg-secondary me-2">${t.node.name}</span>`)
-                  .join('')}
-              </div>
-            
+          <div class="mt-3">
+            <span class="badge-custom">Created by: ${product.user?.name || "Unknown"}</span>
+            <span class="badge-custom">⭐ ${product.votesCount} votes</span>
           </div>
+
+          <div class="mt-4">
+            <h4>🧠 Overview</h4>
+            <p>${product.description || "No detailed description available."}</p>
+          </div>
+
+          <div class="video-section mt-4">
+            <h4>🎥 AI Video Preview</h4>
+            ${videoEmbed}
+          </div>
+
+          <div class="like-comment">
+            <button>❤️ Like</button>
+            <button>💬 Comment</button>
+          </div>
+
+          <a href="${product.website}" target="_blank" class="visit-btn">Visit Website →</a>
         </div>
       `;
     } else {
-      document.getElementById("productPage").innerHTML = "<p class='text-center text-danger'>❌ No product found.</p>";
+      document.getElementById("productDetails").innerHTML = `<p class='text-danger text-center'>❌ No product data found.</p>`;
     }
-
-    const toggler = document.getElementById("themeToggler");
-const themeIcon = document.getElementById("themeIcon");
-
-toggler.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-
-  if (document.body.classList.contains("dark-mode")) {
-    themeIcon.textContent = "dark_mode";
-  } else {
-    themeIcon.textContent = "light_mode";
-  }
-});
-const restoggler = document.getElementById("resToggler");
-const resthemeIcon = document.getElementById("resthemeIcon");
-
-restoggler.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-
-  if (document.body.classList.contains("dark-mode")) {
-    resthemeIcon.textContent = "dark_mode";
-  } else {
-    resthemeIcon.textContent = "light_mode";
-  }
-});
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

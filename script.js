@@ -60,6 +60,11 @@ async function fetchMonthlyData() {
     const data = await res.json();
     productList.innerHTML = "";
 
+     summary.innerHTML = `
+      <h3>🔥 Month Product Hunt Launches</h2>
+      <p>Total Products: ${data.products.length}</p>
+    `;
+
     data.products.forEach(p => {
       const div = document.createElement("div");
       div.className = "card";
@@ -110,7 +115,7 @@ async function latestfetchData() {
   summary.innerHTML = "";
 
   try {
-    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/");
+    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/latest=true");
     if (!res.ok) throw new Error("Failed to fetch latest data");
 
     const data = await res.json();
@@ -150,7 +155,8 @@ async function tradingfetchData() {
   summary.innerHTML = "";
 
   try {
-    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/");
+    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/?trading=true");
+
     if (!res.ok) throw new Error("Failed to fetch latest data");
 
     const data = await res.json();
@@ -169,8 +175,13 @@ async function tradingfetchData() {
         <p>${post.tagline}</p>
         <img src="${post.thumbnail.url}" alt="${post.name}">
         <p>⭐ ${post.votesCount} votes</p>
+       
         <a href="${post.website}" target="_blank">Visit →</a>
       `;
+       card.addEventListener("click", () => {
+            localStorage.setItem("selectedProduct", JSON.stringify(post));
+            window.location.href = "product.html";
+          });
       productList.appendChild(card);
     });
 
@@ -181,6 +192,64 @@ async function tradingfetchData() {
 
 
 window.onload = tradingfetchData;
+
+async function fetchAIProducts() {
+  const productList = document.getElementById("productList");
+  const overview = document.getElementById("overview");
+  const backBtn = document.getElementById("backBtn");
+
+  productList.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const res = await fetch("https://product-hunt-worker.manishzala1718.workers.dev/");
+    const data = await res.json();
+    const products = data.posts;
+
+    productList.innerHTML = "";
+
+    products.forEach((product) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${product.thumbnail}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.tagline}</p>
+      `;
+
+      // 👇 Click karne par overview dikhao
+      card.addEventListener("click", () => {
+        showOverview(product);
+      });
+
+      productList.appendChild(card);
+    });
+
+    // Back button se wapas card list
+    backBtn.addEventListener("click", () => {
+      overview.classList.add("hidden");
+      productList.style.display = "grid";
+    });
+
+  } catch (err) {
+    productList.innerHTML = "<p>Failed to load data.</p>";
+  }
+}
+
+function showOverview(product) {
+  const overview = document.getElementById("overview");
+  document.getElementById("aiName").textContent = product.name;
+  document.getElementById("aiTagline").textContent = product.tagline;
+  document.getElementById("aiImage").src = product.thumbnail;
+  document.getElementById("aiDescription").textContent = product.description || "No description available.";
+  document.getElementById("aiLink").href = product.website;
+
+  overview.classList.remove("hidden");
+  document.getElementById("productList").style.display = "none";
+}
+
+fetchAIProducts();
+
+
 
 
 
